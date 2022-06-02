@@ -4,6 +4,7 @@
 
 int g_iVotes, iTotalVotes, iNeedVotes, iMaxR;
 bool g_bPlayerVote[MAXPLAYERS+1];
+int iSurrendingTeam; //3 - CT | 2 - T
 
 ConVar hCvar,hCvar1;
 
@@ -25,6 +26,7 @@ public void OnMapStart()
 {
 	g_iVotes = 0;
 	iTotalVotes = 0;
+	iSurrendingTeam = 0;
 }
 
 public void OnClientPutInServer(int client)
@@ -40,33 +42,41 @@ public void OnClientDisconnect(int client)
 
 public Action SurrenderCallback(int client, int args)
 {
+	int ClientTeam = GetClientTeam(client);
 	int iScoreT = CS_GetTeamScore(2);
 	int iScoreCT = CS_GetTeamScore(3);
 	int iMaxRounds = GetConVarInt(FindConVar("mp_maxrounds"));
-	if(iMaxR>(RoundToFloor(float(iScoreT+iScoreCT)/iMaxRounds*100)))
+	if(iSurrendingTeam == 0)
 	{
-		char buffer[256];
-		int teams = GetCountPlayers();
-		iTotalVotes = RoundToFloor(float(g_iVotes/teams)*100);
-		if(g_bPlayerVote[client] == false)
+		iSurrendingTeam = ClientTeam;
+	}
+	if(ClientTeam == iSurrendingTeam)
+	{
+		if(iMaxR>(RoundToFloor(float(iScoreT+iScoreCT)/iMaxRounds*100)))
 		{
-			g_bPlayerVote[client] = true;
-			g_iVotes++;
-			Format(buffer,sizeof(buffer), "Игрок %N проголосовал за сдачу. %s из %s проголосовали!", client, g_iVotes, teams);
-			CGOPrintToChatAll(buffer);
-		}
-		else
-		{
-			Format(buffer,sizeof(buffer), "Вы уже проголосовали за сдачу!");
-			CGOPrintToChatAll(buffer);
-		}
-		
-		if(iTotalVotes<=iNeedVotes)
-		{
-			ConVarChanger("mp_timelimit");
-			ConVarChanger("mp_maxrounds");
-			ConVarChanger("mp_ignore_round_win_conditions");
-			CS_TerminateRound(1.0, "Команда %s сдалась")
+			char buffer[256];
+			int teams = GetCountPlayers();
+			iTotalVotes = RoundToFloor(float(g_iVotes/teams)*100);
+			if(g_bPlayerVote[client] == false)
+			{
+				g_bPlayerVote[client] = true;
+				g_iVotes++;
+				Format(buffer,sizeof(buffer), "Игрок %N проголосовал за сдачу. %s из %s проголосовали!", client, g_iVotes, teams);
+				CGOPrintToChatAll(buffer);
+			}
+			else
+			{
+				Format(buffer,sizeof(buffer), "Вы уже проголосовали за сдачу!");
+				CGOPrintToChatAll(buffer);
+			}
+			
+			if(iTotalVotes<=iNeedVotes)
+			{
+				ConVarChanger("mp_timelimit");
+				ConVarChanger("mp_maxrounds");
+				ConVarChanger("mp_ignore_round_win_conditions");
+				CS_TerminateRound(1.0, (iSurrendingTeam==3) ? CSRoundEnd_CTSurrender:CSRoundEnd_TerroristsSurrender)
+			}
 		}
 	}
 }
