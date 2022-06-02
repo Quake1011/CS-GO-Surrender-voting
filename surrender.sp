@@ -84,7 +84,7 @@ public Action SurrenderCallback(int client, int args)
 int GetCountPlayers()
 {
 	int count = 0;
-	for(int i = 0;i<MaxClients;i++)
+	for(int i = 0;i<=MaxClients;i++)
 	{
 		if(IsClientInGame(i)&&!IsFakeClient(i)&&!IsClientSourceTV(i)) count++;
 	}
