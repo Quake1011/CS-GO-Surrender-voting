@@ -55,7 +55,7 @@ public Action SurrenderCallback(int client, int args)
 		if(iMaxR>(RoundToFloor(float(iScoreT+iScoreCT)/iMaxRounds*100)))
 		{
 			char buffer[256];
-			int teams = GetCountPlayers();
+			int teams = GetCountPlayers(iSurrendingTeam);
 			iTotalVotes = RoundToFloor(float(g_iVotes/teams)*100);
 			if(g_bPlayerVote[client] == false)
 			{
@@ -81,12 +81,12 @@ public Action SurrenderCallback(int client, int args)
 	}
 }
 
-int GetCountPlayers()
+int GetCountPlayers(int team)
 {
 	int count = 0;
 	for(int i = 0;i<=MaxClients;i++)
 	{
-		if(IsClientInGame(i)&&!IsFakeClient(i)&&!IsClientSourceTV(i)) count++;
+		if(GetClientTeam(i)==team && IsClientInGame(i) && !IsFakeClient(i) && !IsClientSourceTV(i)) count++;
 	}
 	return count;
 }
