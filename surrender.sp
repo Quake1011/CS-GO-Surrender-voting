@@ -2,11 +2,18 @@
 #include <cstrike>
 #include <csgo_colors>
 
-int g_iVotes, iTotalVotes, iNeedVotes, iMaxR;
-bool g_bPlayerVote[MAXPLAYERS+1];
-int iSurrendingTeam; //3 - CT | 2 - T
-
-ConVar hCvar,hCvar1;
+int 
+	g_iVotes, 
+	iTotalVotes, 
+	iNeedVotes, 
+	iMaxR;
+bool 
+	g_bPlayerVote[MAXPLAYERS+1];
+int 
+	iSurrendingTeam; //3 - CT | 2 - T
+ConVar 
+	hCvar, 
+	hCvar1;
 
 OnConvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
@@ -52,11 +59,11 @@ public Action SurrenderCallback(int client, int args)
 	}
 	if(ClientTeam == iSurrendingTeam)
 	{
-		if(iMaxR>(RoundToFloor(float(iScoreT+iScoreCT)/iMaxRounds*100)))
+		if(iMaxR > (RoundToFloor(float(iScoreT + iScoreCT) / iMaxRounds * 100)))
 		{
 			char buffer[256];
 			int teams = GetCountPlayers(iSurrendingTeam);
-			iTotalVotes = RoundToFloor(float(g_iVotes/teams)*100);
+			iTotalVotes = RoundToFloor(float(g_iVotes / teams) * 100);
 			if(g_bPlayerVote[client] == false)
 			{
 				g_bPlayerVote[client] = true;
@@ -70,12 +77,12 @@ public Action SurrenderCallback(int client, int args)
 				CGOPrintToChatAll(buffer);
 			}
 			
-			if(iTotalVotes<=iNeedVotes)
+			if(iTotalVotes <= iNeedVotes)
 			{
 				ConVarChanger("mp_timelimit");
 				ConVarChanger("mp_maxrounds");
 				ConVarChanger("mp_ignore_round_win_conditions");
-				CS_TerminateRound(1.0, (iSurrendingTeam==3) ? CSRoundEnd_CTSurrender:CSRoundEnd_TerroristsSurrender)
+				CS_TerminateRound(1.0, (iSurrendingTeam == 3) ? CSRoundEnd_CTSurrender : CSRoundEnd_TerroristsSurrender)
 			}
 		}
 	}
@@ -84,9 +91,9 @@ public Action SurrenderCallback(int client, int args)
 int GetCountPlayers(int team)
 {
 	int count = 0;
-	for(int i = 0;i<=MaxClients;i++)
+	for(int i = 0; i <= MaxClients; i++)
 	{
-		if(GetClientTeam(i)==team && IsClientInGame(i) && !IsFakeClient(i) && !IsClientSourceTV(i)) count++;
+		if(GetClientTeam(i) == team && IsClientInGame(i) && !IsFakeClient(i) && !IsClientSourceTV(i)) count++;
 	}
 	return count;
 }
