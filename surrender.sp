@@ -60,7 +60,7 @@ public Action SurrenderCallback(int client, int args)
 	}
 	if(ClientTeam == iSurrendingTeam)
 	{
-		if(iMaxR > (RoundToFloor(float(iScoreT + iScoreCT) / iMaxRounds * 100)))
+		if(iMaxR >= (RoundToFloor(float(iScoreT + iScoreCT) / iMaxRounds * 100)))
 		{
 			char buffer[256];
 			int teams = GetCountPlayers(iSurrendingTeam);
@@ -70,15 +70,15 @@ public Action SurrenderCallback(int client, int args)
 				g_bPlayerVote[client] = true;
 				g_iVotes++;
 				Format(buffer,sizeof(buffer), "Игрок %N проголосовал за сдачу. %s из %s проголосовали!", client, g_iVotes, teams);
-				if(GetEngineVersion()==Engine_CSGO) CGOPrintToChatAll(buffer);
-				else if(GetEngineVersion()==Engine_CSS) CPrintToChatAll(buffer);
+				if(GetEngineVersion() == Engine_CSGO) CGOPrintToChatAll(buffer);
+				else if(GetEngineVersion() == Engine_CSS) CPrintToChatAll(buffer);
 				else PrintToChatAll(buffer);
 			}
 			else
 			{
 				Format(buffer,sizeof(buffer), "Вы уже проголосовали за сдачу!");
-				if(GetEngineVersion()==Engine_CSGO) CGOPrintToChatAll(buffer);
-				else if(GetEngineVersion()==Engine_CSS) CPrintToChatAll(buffer);
+				if(GetEngineVersion() == Engine_CSGO) CGOPrintToChatAll(buffer);
+				else if(GetEngineVersion() == Engine_CSS) CPrintToChatAll(buffer);
 				else PrintToChatAll(buffer);
 			}
 			
