@@ -1,6 +1,7 @@
 #include <sourcemod>
 #include <cstrike>
 #include <csgo_colors>
+#include <multicolors>
 
 int 
 	g_iVotes, 
@@ -69,12 +70,16 @@ public Action SurrenderCallback(int client, int args)
 				g_bPlayerVote[client] = true;
 				g_iVotes++;
 				Format(buffer,sizeof(buffer), "Игрок %N проголосовал за сдачу. %s из %s проголосовали!", client, g_iVotes, teams);
-				CGOPrintToChatAll(buffer);
+				if(GetEngineVersion()==Engine_CSGO) CGOPrintToChatAll(buffer);
+				else if(GetEngineVersion()==Engine_CSS) CPrintToChatAll(buffer);
+				else PrintToChatAll(buffer);
 			}
 			else
 			{
 				Format(buffer,sizeof(buffer), "Вы уже проголосовали за сдачу!");
-				CGOPrintToChatAll(buffer);
+				if(GetEngineVersion()==Engine_CSGO) CGOPrintToChatAll(buffer);
+				else if(GetEngineVersion()==Engine_CSS) CPrintToChatAll(buffer);
+				else PrintToChatAll(buffer);
 			}
 			
 			if(iTotalVotes <= iNeedVotes)
