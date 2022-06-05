@@ -27,7 +27,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_surrender", SurrenderCallback);
 	
 	HookConVarChange(hCvar = CreateConVar("sm_sur_need_votes", "50"), OnConvarChanged);
-	HookConVarChange(hCvar1 = CreateConVar("sm_sur_max_round", "13"), OnConvarChanged);
+	HookConVarChange(hCvar1 = CreateConVar("sm_sur_max_round", " 2"), OnConvarChanged);
 }
 
 public void OnMapStart()
@@ -50,6 +50,7 @@ public void OnClientDisconnect(int client)
 
 public Action SurrenderCallback(int client, int args)
 {
+	PrintToChatAll("Hi");
 	int ClientTeam = GetClientTeam(client);
 	int iScoreT = CS_GetTeamScore(2);
 	int iScoreCT = CS_GetTeamScore(3);
@@ -69,7 +70,7 @@ public Action SurrenderCallback(int client, int args)
 			{
 				g_bPlayerVote[client] = true;
 				g_iVotes++;
-				Format(buffer,sizeof(buffer), "Игрок %N проголосовал за сдачу. %s из %s проголосовали!", client, g_iVotes, teams);
+				Format(buffer,sizeof(buffer), "Игрок %N проголосовал за сдачу. %i из %i проголосовали!", client, g_iVotes, teams);
 				if(GetEngineVersion() == Engine_CSGO) CGOPrintToChatAll(buffer);
 				else if(GetEngineVersion() == Engine_CSS) CPrintToChatAll(buffer);
 				else PrintToChatAll(buffer);
@@ -84,9 +85,9 @@ public Action SurrenderCallback(int client, int args)
 			
 			if(iTotalVotes <= iNeedVotes)
 			{
-				ConVarChanger("mp_timelimit");
+/* 				ConVarChanger("mp_timelimit");
 				ConVarChanger("mp_maxrounds");
-				ConVarChanger("mp_ignore_round_win_conditions");
+				ConVarChanger("mp_ignore_round_win_conditions"); */
 				CS_TerminateRound(1.0, (iSurrendingTeam == 3) ? CSRoundEnd_CTSurrender : CSRoundEnd_TerroristsSurrender)
 			}
 		}
@@ -96,15 +97,18 @@ public Action SurrenderCallback(int client, int args)
 int GetCountPlayers(int team)
 {
 	int count = 0;
-	for(int i = 0; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	{
-		if(GetClientTeam(i) == team && IsClientInGame(i) && !IsFakeClient(i) && !IsClientSourceTV(i)) count++;
+		if(IsClientInGame(i) && !IsFakeClient(i) && !IsClientSourceTV(i))
+		{
+			if(GetClientTeam(i) == team) count++;
+		}
 	}
 	return count;
 }
-
+/* 
 int ConVarChanger(char[] buffer)
 {
 	SetConVarInt(FindConVar(buffer),0);
 	return 0;
-}
+} */
