@@ -117,7 +117,7 @@ public Action SurrenderCallback(int client, int args)
 /* 				ConVarChanger("mp_timelimit");
 				ConVarChanger("mp_maxrounds");
 				ConVarChanger("mp_ignore_round_win_conditions"); */
-				//CS_TerminateRound(1.0, (iSurrendingTeam == 3) ? CSRoundEnd_CTSurrender : CSRoundEnd_TerroristsSurrender)
+				CS_TerminateRound(1.0, (iSurrendingTeam == 3) ? CSRoundEnd_CTSurrender : CSRoundEnd_TerroristsSurrender)
 			}
 		}
 	}
