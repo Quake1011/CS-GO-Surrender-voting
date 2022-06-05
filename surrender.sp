@@ -74,18 +74,18 @@ public Action SurrenderCallback(int client, int args)
 	int iScoreT = CS_GetTeamScore(2);
 	int iScoreCT = CS_GetTeamScore(3);
 	int iMaxRounds = GetConVarInt(FindConVar("mp_maxrounds"));
-	char map[64];
+	
 	if(iSurrendingTeam == 0)
 	{
 		iSurrendingTeam = ClientTeam;
 	}
-	
+	/*char map[64];
 	GetNextMap(map, sizeof(map));
 	
 	if(!StrContains(map,"dust"))
 	{
 		SetNextMap("de_dust2");
-	}
+	}*/
 	if(ClientTeam == iSurrendingTeam)
 	{
 		if(iMaxR >= (RoundToFloor(float(iScoreT + iScoreCT) / iMaxRounds * 100)))
